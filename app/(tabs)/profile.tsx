@@ -9,17 +9,7 @@ import {
   Alert,
   Image,
 } from 'react-native';
-import { 
-  User, 
-  Mail, 
-  Users, 
-  LogOut, 
-  ChevronRight, 
-  Edit,
-  Settings,
-  Shield,
-  Bell
-} from 'lucide-react-native';
+import { User, Mail, Users, LogOut, ChevronRight, CreditCard as Edit, Settings, Shield, Bell } from 'lucide-react-native';
 import { useThemeColors, useColorScheme } from '@/hooks/useColorScheme';
 import { Spacing, Typography, BorderRadius, Shadows } from '@/constants/Colors';
 import { useRouter } from 'expo-router';
