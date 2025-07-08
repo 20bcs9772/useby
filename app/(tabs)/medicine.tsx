@@ -9,9 +9,10 @@ import {
   Switch,
   Alert,
 } from 'react-native';
-import { Plus, Clock, CircleCheck as CheckCircle, CircleAlert as AlertCircle, Calendar, Pill, SunSnow as Snooze } from 'lucide-react-native';
+import { Plus, Clock, CircleCheck as CheckCircle, CircleAlert as AlertCircle, Calendar, Pill, SunSnow as Snooze, Edit, Trash2 } from 'lucide-react-native';
 import { useThemeColors, useColorScheme } from '@/hooks/useColorScheme';
 import { Spacing, Typography, BorderRadius, Shadows } from '@/constants/Colors';
+import { useRouter } from 'expo-router';
 
 const mockMedicines = [
   {
@@ -62,8 +63,10 @@ export default function Medicine() {
   const [activeTab, setActiveTab] = useState(0);
   const [reminderEnabled, setReminderEnabled] = useState(true);
   const [schedule, setSchedule] = useState(todaySchedule);
+  const [medicines, setMedicines] = useState(mockMedicines);
   const colors = useThemeColors();
   const colorScheme = useColorScheme();
+  const router = useRouter();
 
   const getConditionIcon = (condition: string) => {
     return condition === 'with_food' ? '🍽️' : '⏰';
@@ -86,6 +89,32 @@ export default function Medicine() {
 
   const handleMissedMedicine = (scheduleId: number) => {
     Alert.alert('Missed Dose', 'Dose marked as missed');
+  };
+
+  const handleAddMedicine = () => {
+    router.push('/medicine/add');
+  };
+
+  const handleEditMedicine = (medicineId: number) => {
+    Alert.alert('Edit Medicine', `Edit medicine with ID: ${medicineId}`);
+  };
+
+  const handleDeleteMedicine = (medicineId: number) => {
+    Alert.alert(
+      'Delete Medicine',
+      'Are you sure you want to delete this medicine?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Delete', 
+          style: 'destructive',
+          onPress: () => {
+            setMedicines(prev => prev.filter(m => m.id !== medicineId));
+            Alert.alert('Deleted', 'Medicine removed successfully');
+          }
+        },
+      ]
+    );
   };
 
   const renderTodayView = () => (
@@ -191,7 +220,7 @@ export default function Medicine() {
 
   const renderMedicinesView = () => (
     <View style={styles.medicinesContainer}>
-      {mockMedicines.map((medicine) => (
+      {medicines.map((medicine) => (
         <TouchableOpacity 
           key={medicine.id} 
           style={[
@@ -199,6 +228,7 @@ export default function Medicine() {
             { backgroundColor: colors.surface },
             colorScheme === 'light' ? Shadows.light : Shadows.dark
           ]}
+          onLongPress={() => handleEditMedicine(medicine.id)}
         >
           <View style={styles.medicineHeader}>
             <View style={[styles.medicineIcon, { backgroundColor: colors.primary + '20' }]}>
@@ -208,10 +238,23 @@ export default function Medicine() {
               <Text style={[styles.medicineName, { color: colors.text }]}>{medicine.name}</Text>
               <Text style={[styles.medicineDosage, { color: colors.textMuted }]}>{medicine.dosage}</Text>
             </View>
-            <View style={styles.medicineStatus}>
-              <Text style={[styles.frequencyText, { color: colors.primary }]}>{medicine.frequency}</Text>
+            <View style={styles.medicineActions}>
+              <TouchableOpacity 
+                style={[styles.medicineActionButton, { backgroundColor: colors.primary + '20' }]}
+                onPress={() => handleEditMedicine(medicine.id)}
+              >
+                <Edit size={16} color={colors.primary} />
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.medicineActionButton, { backgroundColor: colors.error + '20' }]}
+                onPress={() => handleDeleteMedicine(medicine.id)}
+              >
+                <Trash2 size={16} color={colors.error} />
+              </TouchableOpacity>
             </View>
           </View>
+
+          <Text style={[styles.frequencyText, { color: colors.primary }]}>{medicine.frequency}</Text>
 
           <View style={styles.medicineDetails}>
             <Text style={[styles.instructionsText, { color: colors.textMuted }]}>{medicine.instructions}</Text>
@@ -253,7 +296,7 @@ export default function Medicine() {
           { backgroundColor: colors.primary },
           colorScheme === 'light' ? Shadows.light : {}
         ]}
-        onPress={() => Alert.alert('Add Medicine', 'Medicine setup form would open here')}
+        onPress={handleAddMedicine}
       >
         <Plus size={20} color={colors.surface} />
         <Text style={[styles.addMedicineText, { color: colors.surface }]}>Add New Medicine</Text>
@@ -332,7 +375,7 @@ export default function Medicine() {
             { backgroundColor: colors.surface },
             colorScheme === 'light' ? Shadows.light : Shadows.dark
           ]}
-          onPress={() => Alert.alert('Add Medicine', 'Medicine setup form would open here')}
+          onPress={handleAddMedicine}
         >
           <Plus size={24} color={colors.primary} />
         </TouchableOpacity>
@@ -561,12 +604,22 @@ const styles = StyleSheet.create({
   medicineInfo: {
     flex: 1,
   },
-  medicineStatus: {
-    alignItems: 'flex-end',
+  medicineActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  medicineActionButton: {
+    width: 32,
+    height: 32,
+    borderRadius: BorderRadius.sm,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: Spacing.sm,
   },
   frequencyText: {
     ...Typography.caption,
     fontFamily: 'Inter-SemiBold',
+    marginBottom: Spacing.md,
   },
   medicineDetails: {
     marginBottom: Spacing.lg,

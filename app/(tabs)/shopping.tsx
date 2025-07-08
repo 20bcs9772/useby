@@ -9,9 +9,10 @@ import {
   Alert,
   Image,
 } from 'react-native';
-import { ShoppingCart, Plus, ExternalLink, Check, X, Star, Truck, DollarSign, Package } from 'lucide-react-native';
+import { ShoppingCart, Plus, ExternalLink, Check, X, Star, Truck, DollarSign, Package, Camera, Edit2 } from 'lucide-react-native';
 import { useThemeColors, useColorScheme } from '@/hooks/useColorScheme';
 import { Spacing, Typography, BorderRadius, Shadows } from '@/constants/Colors';
+import { useRouter } from 'expo-router';
 
 const suggestedItems = [
   {
@@ -83,6 +84,7 @@ export default function Shopping() {
   const [currentShoppingList, setCurrentShoppingList] = useState(shoppingList);
   const colors = useThemeColors();
   const colorScheme = useColorScheme();
+  const router = useRouter();
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -138,6 +140,10 @@ export default function Shopping() {
 
   const openPlatform = (platform: string, productName: string) => {
     Alert.alert('Opening ' + platform, `This would open ${platform} app/website with ${productName}`);
+  };
+
+  const handleAddItem = () => {
+    router.push('/shopping/add');
   };
 
   const renderSuggestionsView = () => (
@@ -379,11 +385,11 @@ export default function Shopping() {
         <Text style={[styles.title, { color: colors.text }]}>Smart Shopping</Text>
         <TouchableOpacity 
           style={[
-            styles.addButton, 
+            styles.floatingAddButton, 
             { backgroundColor: colors.surface },
             colorScheme === 'light' ? Shadows.light : Shadows.dark
           ]}
-          onPress={() => Alert.alert('Add Item', 'Manual item entry would open here')}
+          onPress={handleAddItem}
         >
           <Plus size={24} color={colors.primary} />
         </TouchableOpacity>
@@ -437,7 +443,7 @@ const styles = StyleSheet.create({
     ...Typography.title,
     fontSize: 28,
   },
-  addButton: {
+  floatingAddButton: {
     borderRadius: BorderRadius.md,
     width: 48,
     height: 48,

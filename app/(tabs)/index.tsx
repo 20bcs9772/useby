@@ -11,7 +11,7 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-import { Search, Filter, Plus, CreditCard as Edit, RotateCcw, Check, X, Calendar, Tag } from 'lucide-react-native';
+import { Search, Filter, Plus, CreditCard as Edit, RotateCcw, Check, X, Calendar, Tag, Bell, Camera } from 'lucide-react-native';
 import { useThemeColors, useColorScheme } from '@/hooks/useColorScheme';
 import { Spacing, Typography, BorderRadius, Shadows } from '@/constants/Colors';
 
@@ -165,6 +165,14 @@ export default function Home() {
       { text: 'Cancel', style: 'cancel' },
       { text: 'Add to List', onPress: () => Alert.alert('Added', 'Product added to shopping list') },
     ]);
+  };
+
+  const handleNotifications = () => {
+    Alert.alert('Notifications', 'Opening notifications...');
+  };
+
+  const handleAddProduct = () => {
+    Alert.alert('Add Product', 'Opening barcode scanner...');
   };
 
   const toggleCategory = (category) => {
@@ -378,12 +386,20 @@ export default function Home() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>UseBy</Text>
-        <TouchableOpacity 
-          style={[styles.addButton, { backgroundColor: colors.primary }]}
-          onPress={() => Alert.alert('Add Product', 'Camera would open for barcode scanning')}
-        >
-          <Plus size={24} color={colors.surface} />
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          <TouchableOpacity 
+            style={[styles.headerButton, { backgroundColor: colors.surface }]}
+            onPress={handleNotifications}
+          >
+            <Bell size={20} color={colors.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.floatingAddButton, { backgroundColor: colors.primary }]}
+            onPress={handleAddProduct}
+          >
+            <Camera size={20} color={colors.surface} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.searchContainer}>
@@ -440,7 +456,7 @@ export default function Home() {
             </Text>
             <TouchableOpacity 
               style={[styles.emptyStateButton, { backgroundColor: colors.primary }]}
-              onPress={() => Alert.alert('Add Product', 'Camera would open for barcode scanning')}
+              onPress={handleAddProduct}
             >
               <Plus size={20} color={colors.surface} />
               <Text style={[styles.emptyStateButtonText, { color: colors.surface }]}>Add Product</Text>
@@ -471,7 +487,19 @@ const styles = StyleSheet.create({
     ...Typography.title,
     fontSize: 28,
   },
-  addButton: {
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerButton: {
+    width: 48,
+    height: 48,
+    borderRadius: BorderRadius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: Spacing.sm,
+  },
+  floatingAddButton: {
     width: 48,
     height: 48,
     borderRadius: BorderRadius.md,

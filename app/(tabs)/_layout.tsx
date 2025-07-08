@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Chrome as Home, Pill, ShoppingBag, Bell, Settings } from 'lucide-react-native';
+import { Chrome as Home, Pill, ShoppingBag, Settings, User } from 'lucide-react-native';
 import { useThemeColors } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
@@ -58,11 +58,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="notifications"
+        name="profile"
         options={{
-          title: 'Notifications',
+          title: 'Profile',
           tabBarIcon: ({ size, color }) => (
-            <Bell size={size} color={color} strokeWidth={2} />
+            <User size={size} color={color} strokeWidth={2} />
           ),
         }}
       />
