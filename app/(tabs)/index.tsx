@@ -13,18 +13,7 @@ import {
   Modal,
   Alert,
 } from "react-native"
-import {
-  Search,
-  Filter,
-  Plus,
-  CreditCard as Edit,
-  RotateCcw,
-  Check,
-  X,
-  Calendar,
-  Bell,
-  Camera,
-} from "lucide-react-native"
+import { Search, Filter, Plus, CreditCard as Edit, RotateCcw, Check, X, Calendar, Bell } from "lucide-react-native"
 import { useThemeColors, useColorScheme } from "@/hooks/useColorScheme"
 import { Spacing, Typography, BorderRadius, Shadows } from "@/constants/Colors"
 import { useRouter } from "expo-router"
@@ -184,7 +173,7 @@ export default function Home() {
   }
 
   const handleAddProduct = () => {
-    router.push("/medicine/add") // or could be a general add page
+    router.push("/add-product")
   }
 
   const toggleCategory = (category) => {
@@ -420,7 +409,7 @@ export default function Home() {
             style={[styles.floatingAddButton, { backgroundColor: colors.primary }]}
             onPress={handleAddProduct}
           >
-            <Camera size={20} color={colors.surface} />
+            <Plus size={20} color={colors.surface} />
           </TouchableOpacity>
         </View>
       </View>
