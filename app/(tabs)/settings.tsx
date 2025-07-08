@@ -18,9 +18,12 @@ import {
   Cloud,
   Info,
   Calendar,
+  Edit,
+  Camera,
 } from "lucide-react-native"
 import { useThemeColors, useColorScheme } from "@/hooks/useColorScheme"
 import { Spacing, Typography, BorderRadius, Shadows } from "@/constants/Colors"
+import { useRouter } from "expo-router"
 
 export default function Settings() {
   const [notifications, setNotifications] = useState(true)
@@ -33,6 +36,7 @@ export default function Settings() {
 
   const colors = useThemeColors()
   const colorScheme = useColorScheme()
+  const router = useRouter()
 
   const handleLogout = () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
@@ -60,6 +64,14 @@ export default function Settings() {
       { text: "Email Invite", onPress: () => Alert.alert("Email", "Email invite would be sent") },
       { text: "QR Code", onPress: () => Alert.alert("QR Code", "QR code sharing would open") },
     ])
+  }
+
+  const handleEditProfile = () => {
+    Alert.alert("Edit Profile", "Profile editing feature coming soon!")
+  }
+
+  const handleChangePhoto = () => {
+    Alert.alert("Change Photo", "Photo upload feature coming soon!")
   }
 
   const SettingItem = ({
@@ -128,13 +140,62 @@ export default function Settings() {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <SettingSection title="Account">
-          <SettingItem
-            icon={User}
-            title="Profile"
-            subtitle="Manage your account details"
-            onPress={() => Alert.alert("Profile", "Profile settings would open here")}
-          />
+        {/* Profile Section */}
+        <SettingSection title="Profile">
+          <View
+            style={[
+              styles.profileCard,
+              { backgroundColor: colors.surface },
+              colorScheme === "light" ? Shadows.light : Shadows.dark,
+            ]}
+          >
+            <View style={styles.profileHeader}>
+              <View style={styles.profileImageContainer}>
+                <View style={[styles.profileImage, { backgroundColor: colors.primary + "20" }]}>
+                  <User size={32} color={colors.primary} />
+                </View>
+                <TouchableOpacity
+                  style={[styles.cameraButton, { backgroundColor: colors.primary }]}
+                  onPress={handleChangePhoto}
+                >
+                  <Camera size={12} color={colors.surface} />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.profileInfo}>
+                <Text style={[styles.profileName, { color: colors.text }]}>John Doe</Text>
+                <Text style={[styles.profileEmail, { color: colors.textMuted }]}>john.doe@example.com</Text>
+                <Text style={[styles.memberSince, { color: colors.textMuted }]}>Member since Jan 2024</Text>
+              </View>
+
+              <TouchableOpacity
+                style={[styles.editButton, { backgroundColor: colors.background }]}
+                onPress={handleEditProfile}
+              >
+                <Edit size={16} color={colors.primary} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Stats */}
+            <View style={styles.statsContainer}>
+              <View style={styles.statItem}>
+                <Text style={[styles.statNumber, { color: colors.success }]}>47</Text>
+                <Text style={[styles.statLabel, { color: colors.textMuted }]}>Items Tracked</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Text style={[styles.statNumber, { color: colors.primary }]}>23</Text>
+                <Text style={[styles.statLabel, { color: colors.textMuted }]}>Days Active</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Text style={[styles.statNumber, { color: colors.warning }]}>₹1,240</Text>
+                <Text style={[styles.statLabel, { color: colors.textMuted }]}>Money Saved</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Text style={[styles.statNumber, { color: colors.success }]}>93%</Text>
+                <Text style={[styles.statLabel, { color: colors.textMuted }]}>Compliance</Text>
+              </View>
+            </View>
+          </View>
         </SettingSection>
 
         <SettingSection title="Notifications">
@@ -312,6 +373,80 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...Typography.subtitle,
     marginBottom: Spacing.lg,
+  },
+  profileCard: {
+    borderRadius: BorderRadius.md,
+    padding: Spacing.lg,
+    marginBottom: Spacing.sm,
+  },
+  profileHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: Spacing.lg,
+  },
+  profileImageContainer: {
+    position: "relative",
+    marginRight: Spacing.lg,
+  },
+  profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cameraButton: {
+    position: "absolute",
+    bottom: -2,
+    right: -2,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  profileInfo: {
+    flex: 1,
+  },
+  profileName: {
+    ...Typography.subtitle,
+    fontSize: 18,
+  },
+  profileEmail: {
+    ...Typography.body,
+    marginTop: Spacing.xs,
+  },
+  memberSince: {
+    ...Typography.caption,
+    marginTop: Spacing.xs,
+  },
+  editButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: Spacing.lg,
+    borderTopWidth: 1,
+    borderTopColor: "#E5E5E5",
+  },
+  statItem: {
+    alignItems: "center",
+    flex: 1,
+  },
+  statNumber: {
+    ...Typography.subtitle,
+    fontSize: 16,
+    fontFamily: "Inter-Bold",
+  },
+  statLabel: {
+    ...Typography.caption,
+    marginTop: Spacing.xs,
+    textAlign: "center",
   },
   settingItem: {
     flexDirection: "row",
