@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Alert, Image } from "react-native"
-import { ShoppingCart, Plus, ExternalLink, Check, X, Star, Truck, DollarSign, Package, Bell } from "lucide-react-native"
+import { ShoppingCart, Plus, ExternalLink, Check, X, Star, Truck, DollarSign, Package } from "lucide-react-native"
 import { useThemeColors, useColorScheme } from "@/hooks/useColorScheme"
 import { Spacing, Typography, BorderRadius, Shadows } from "@/constants/Colors"
 import { useRouter } from "expo-router"
@@ -368,16 +368,6 @@ export default function Shopping() {
         <View style={styles.headerActions}>
           <TouchableOpacity
             style={[
-              styles.headerButton,
-              { backgroundColor: colors.surface },
-              colorScheme === "light" ? Shadows.light : Shadows.dark,
-            ]}
-            onPress={() => router.push("/notifications")}
-          >
-            <Bell size={20} color={colors.primary} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
               styles.floatingAddButton,
               { backgroundColor: colors.primary },
               colorScheme === "light" ? Shadows.light : {},
@@ -433,14 +423,6 @@ const styles = StyleSheet.create({
   headerActions: {
     flexDirection: "row",
     alignItems: "center",
-  },
-  headerButton: {
-    borderRadius: BorderRadius.md,
-    width: 48,
-    height: 48,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: Spacing.sm,
   },
   title: {
     ...Typography.title,
