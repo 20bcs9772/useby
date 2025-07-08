@@ -76,6 +76,15 @@ export default function Onboarding() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <ArrowLeft size={24} color={colors.text} />
+        </TouchableOpacity>
+      </View>
+      
       <ScrollView
         ref={scrollViewRef}
         horizontal
@@ -148,6 +157,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    paddingHorizontal: Spacing.lg,
+    paddingTop: 60,
+    paddingBottom: Spacing.md,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   scrollView: {
     flex: 1,
   },
@@ -155,7 +175,7 @@ const styles = StyleSheet.create({
     width,
     flex: 1,
     paddingHorizontal: Spacing.xxl,
-    paddingTop: 60,
+    paddingTop: Spacing.lg,
     alignItems: 'center',
   },
   imageContainer: {

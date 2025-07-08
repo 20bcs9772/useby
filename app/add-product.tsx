@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, SafeAreaView, Alert } from "react-native"
 import { Camera, Search, Calendar, Tag, Package, CircleCheck as CheckCircle } from "lucide-react-native"
+import { ArrowLeft } from "lucide-react-native"
 import { useThemeColors, useColorScheme } from "@/hooks/useColorScheme"
 import { Spacing, Typography, BorderRadius, Shadows } from "@/constants/Colors"
 import { useRouter } from "expo-router"
@@ -83,7 +84,17 @@ export default function AddProduct() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <ArrowLeft size={24} color={colors.text} />
+        </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text }]}>Add Product</Text>
+        <View style={styles.headerSpacer} />
+      </View>
+      
+      <View style={styles.subtitleContainer}>
         <Text style={[styles.subtitle, { color: colors.textMuted }]}>Track a new household item</Text>
       </View>
 
@@ -264,17 +275,34 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.lg,
+    paddingBottom: Spacing.md,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerSpacer: {
+    width: 40,
+  },
+  subtitleContainer: {
+    paddingHorizontal: Spacing.lg,
     paddingBottom: Spacing.xl,
   },
   title: {
     ...Typography.title,
     fontSize: 28,
+    flex: 1,
+    textAlign: 'center',
   },
   subtitle: {
     ...Typography.body,
-    marginTop: Spacing.xs,
   },
   content: {
     flex: 1,
