@@ -96,7 +96,7 @@ export default function Medicine() {
   };
 
   const handleEditMedicine = (medicineId: number) => {
-    Alert.alert('Edit Medicine', `Edit medicine with ID: ${medicineId}`);
+    router.push(`/medicine/edit?id=${medicineId}`);
   };
 
   const handleDeleteMedicine = (medicineId: number) => {
