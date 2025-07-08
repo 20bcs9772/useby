@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Mail, Lock, Eye, EyeOff, User, CircleCheck as CheckCircle, CircleAlert as AlertCircle } from 'lucide-react-native';
-import { ArrowLeft } from 'lucide-react-native';
 import { useThemeColors, useColorScheme } from '@/hooks/useColorScheme';
 import { Spacing, Typography, BorderRadius, Shadows } from '@/constants/Colors';
 
@@ -101,7 +100,6 @@ export default function Auth() {
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <ArrowLeft size={24} color={colors.text} />
         </TouchableOpacity>
       </View>
       
