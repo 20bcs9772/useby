@@ -1,9 +1,9 @@
-import { Tabs } from "expo-router"
-import { Chrome as Home, Pill, ShoppingBag, User } from "lucide-react-native"
-import { useThemeColors } from "@/hooks/useColorScheme"
+ import { Tabs } from 'expo-router';
+import { Chrome as Home, Pill, ShoppingBag, Bell, Settings } from 'lucide-react-native';
+import { useThemeColors } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
-  const colors = useThemeColors()
+  const colors = useThemeColors();
 
   return (
     <Tabs
@@ -25,7 +25,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: colors.textMuted,
         tabBarLabelStyle: {
           fontSize: 12,
-          fontFamily: "Inter-Medium",
+          fontFamily: 'Inter-Medium',
           marginTop: 4,
         },
       }}
@@ -33,31 +33,48 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
-          tabBarIcon: ({ size, color }) => <Home size={size} color={color} strokeWidth={2} />,
+          title: 'Home',
+          tabBarIcon: ({ size, color }) => (
+            <Home size={size} color={color} strokeWidth={2} />
+          ),
         }}
       />
       <Tabs.Screen
         name="medicine"
         options={{
-          title: "Medicine",
-          tabBarIcon: ({ size, color }) => <Pill size={size} color={color} strokeWidth={2} />,
+          title: 'Medicine',
+          tabBarIcon: ({ size, color }) => (
+            <Pill size={size} color={color} strokeWidth={2} />
+          ),
         }}
       />
       <Tabs.Screen
         name="shopping"
         options={{
-          title: "Shopping",
-          tabBarIcon: ({ size, color }) => <ShoppingBag size={size} color={color} strokeWidth={2} />,
+          title: 'Shopping',
+          tabBarIcon: ({ size, color }) => (
+            <ShoppingBag size={size} color={color} strokeWidth={2} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="notifications"
         options={{
-          title: "Profile",
-          tabBarIcon: ({ size, color }) => <User size={size} color={color} strokeWidth={2} />,
+          title: 'Notifications',
+          tabBarIcon: ({ size, color }) => (
+            <Bell size={size} color={color} strokeWidth={2} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ size, color }) => (
+            <Settings size={size} color={color} strokeWidth={2} />
+          ),
         }}
       />
     </Tabs>
-  )
+  );
 }
