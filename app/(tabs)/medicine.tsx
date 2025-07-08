@@ -9,7 +9,7 @@ import {
   Switch,
   Alert,
 } from 'react-native';
-import { Plus, Clock, CircleCheck as CheckCircle, CircleAlert as AlertCircle, Calendar, Pill, SunSnow as Snooze, Edit, Trash2 } from 'lucide-react-native';
+import { Plus, Clock, CircleCheck as CheckCircle, CircleAlert as AlertCircle, Calendar, Pill, SunSnow as Snooze, CreditCard as Edit, Trash2 } from 'lucide-react-native';
 import { useThemeColors, useColorScheme } from '@/hooks/useColorScheme';
 import { Spacing, Typography, BorderRadius, Shadows } from '@/constants/Colors';
 import { useRouter } from 'expo-router';

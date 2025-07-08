@@ -9,7 +9,7 @@ import {
   Alert,
   Image,
 } from 'react-native';
-import { ShoppingCart, Plus, ExternalLink, Check, X, Star, Truck, DollarSign, Package, Camera, Edit2 } from 'lucide-react-native';
+import { ShoppingCart, Plus, ExternalLink, Check, X, Star, Truck, DollarSign, Package, Camera, CreditCard as Edit2 } from 'lucide-react-native';
 import { useThemeColors, useColorScheme } from '@/hooks/useColorScheme';
 import { Spacing, Typography, BorderRadius, Shadows } from '@/constants/Colors';
 import { useRouter } from 'expo-router';
