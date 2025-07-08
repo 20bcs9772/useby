@@ -9,7 +9,7 @@ import {
   Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Clock, Shield, Bell, ArrowRight, ArrowLeft } from 'lucide-react-native';
+import { Clock, Shield, Bell, ArrowRight } from 'lucide-react-native';
 import { useThemeColors, useColorScheme } from '@/hooks/useColorScheme';
 import { Spacing, Typography, BorderRadius, Shadows } from '@/constants/Colors';
 
@@ -76,15 +76,6 @@ export default function Onboarding() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
-      </View>
-      
       <ScrollView
         ref={scrollViewRef}
         horizontal
@@ -129,7 +120,6 @@ export default function Onboarding() {
         <View style={styles.buttonContainer}>
           {currentIndex > 0 && (
             <TouchableOpacity style={styles.backButton} onPress={handlePrevious}>
-              <ArrowLeft size={20} color={colors.primary} />
               <Text style={[styles.backButtonText, { color: colors.primary }]}>Back</Text>
             </TouchableOpacity>
           )}
@@ -157,17 +147,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerContainer: {
-    paddingHorizontal: Spacing.lg,
-    paddingTop: 60,
-    paddingBottom: Spacing.md,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   scrollView: {
     flex: 1,
   },
@@ -175,7 +154,7 @@ const styles = StyleSheet.create({
     width,
     flex: 1,
     paddingHorizontal: Spacing.xxl,
-    paddingTop: Spacing.lg,
+    paddingTop: 60,
     alignItems: 'center',
   },
   imageContainer: {
