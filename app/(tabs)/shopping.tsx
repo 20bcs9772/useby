@@ -1,150 +1,139 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-  Alert,
-  Image,
-} from 'react-native';
-import { ShoppingCart, Plus, ExternalLink, Check, X, Star, Truck, DollarSign, Package, Camera, CreditCard as Edit2 } from 'lucide-react-native';
-import { useThemeColors, useColorScheme } from '@/hooks/useColorScheme';
-import { Spacing, Typography, BorderRadius, Shadows } from '@/constants/Colors';
-import { useRouter } from 'expo-router';
+"use client"
+
+import { useState } from "react"
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Alert, Image } from "react-native"
+import { ShoppingCart, Plus, ExternalLink, Check, X, Star, Truck, DollarSign, Package, Bell } from "lucide-react-native"
+import { useThemeColors, useColorScheme } from "@/hooks/useColorScheme"
+import { Spacing, Typography, BorderRadius, Shadows } from "@/constants/Colors"
+import { useRouter } from "expo-router"
 
 const suggestedItems = [
   {
     id: 1,
-    name: 'All-Purpose Cleaner',
-    reason: 'Expired 2 days ago',
-    category: 'Cleaning',
-    priority: 'high',
-    image: 'https://images.pexels.com/photos/4239091/pexels-photo-4239091.jpeg?auto=compress&cs=tinysrgb&w=200',
+    name: "All-Purpose Cleaner",
+    reason: "Expired 2 days ago",
+    category: "Cleaning",
+    priority: "high",
+    image: "https://images.pexels.com/photos/4239091/pexels-photo-4239091.jpeg?auto=compress&cs=tinysrgb&w=200",
     prices: [
-      { platform: 'Blinkit', price: '₹299', delivery: '10 min', inStock: true, recommended: true },
-      { platform: 'Zepto', price: '₹320', delivery: '15 min', inStock: true, recommended: false },
-      { platform: 'Amazon', price: '₹280', delivery: '1 day', inStock: true, recommended: false },
-    ]
+      { platform: "Blinkit", price: "₹299", delivery: "10 min", inStock: true, recommended: true },
+      { platform: "Zepto", price: "₹320", delivery: "15 min", inStock: true, recommended: false },
+      { platform: "Amazon", price: "₹280", delivery: "1 day", inStock: true, recommended: false },
+    ],
   },
   {
     id: 2,
-    name: 'Vitamin D3 Tablets',
-    reason: 'Expires in 5 days',
-    category: 'Medicine',
-    priority: 'medium',
-    image: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=200',
+    name: "Vitamin D3 Tablets",
+    reason: "Expires in 5 days",
+    category: "Medicine",
+    priority: "medium",
+    image: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=200",
     prices: [
-      { platform: '1mg', price: '₹450', delivery: '2 hours', inStock: true, recommended: true },
-      { platform: 'Pharmeasy', price: '₹480', delivery: '3 hours', inStock: true, recommended: false },
-      { platform: 'Amazon', price: '₹420', delivery: '1 day', inStock: true, recommended: false },
-    ]
+      { platform: "1mg", price: "₹450", delivery: "2 hours", inStock: true, recommended: true },
+      { platform: "Pharmeasy", price: "₹480", delivery: "3 hours", inStock: true, recommended: false },
+      { platform: "Amazon", price: "₹420", delivery: "1 day", inStock: true, recommended: false },
+    ],
   },
   {
     id: 3,
-    name: 'Face Moisturizer',
-    reason: 'Running low',
-    category: 'Cosmetics',
-    priority: 'low',
-    image: 'https://images.pexels.com/photos/3685530/pexels-photo-3685530.jpeg?auto=compress&cs=tinysrgb&w=200',
+    name: "Face Moisturizer",
+    reason: "Running low",
+    category: "Cosmetics",
+    priority: "low",
+    image: "https://images.pexels.com/photos/3685530/pexels-photo-3685530.jpeg?auto=compress&cs=tinysrgb&w=200",
     prices: [
-      { platform: 'Nykaa', price: '₹650', delivery: '1 day', inStock: false, recommended: false },
-      { platform: 'Amazon', price: '₹620', delivery: '2 days', inStock: true, recommended: true },
-      { platform: 'Flipkart', price: '₹680', delivery: '3 days', inStock: true, recommended: false },
-    ]
+      { platform: "Nykaa", price: "₹650", delivery: "1 day", inStock: false, recommended: false },
+      { platform: "Amazon", price: "₹620", delivery: "2 days", inStock: true, recommended: true },
+      { platform: "Flipkart", price: "₹680", delivery: "3 days", inStock: true, recommended: false },
+    ],
   },
-];
+]
 
 const shoppingList = [
   {
     id: 1,
-    name: 'All-Purpose Cleaner',
+    name: "All-Purpose Cleaner",
     quantity: 1,
-    bestPrice: '₹280',
-    platform: 'Amazon',
-    image: 'https://images.pexels.com/photos/4239091/pexels-photo-4239091.jpeg?auto=compress&cs=tinysrgb&w=200',
+    bestPrice: "₹280",
+    platform: "Amazon",
+    image: "https://images.pexels.com/photos/4239091/pexels-photo-4239091.jpeg?auto=compress&cs=tinysrgb&w=200",
   },
   {
     id: 2,
-    name: 'Vitamin D3 Tablets',
+    name: "Vitamin D3 Tablets",
     quantity: 2,
-    bestPrice: '₹420',
-    platform: '1mg',
-    image: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=200',
+    bestPrice: "₹420",
+    platform: "1mg",
+    image: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=200",
   },
-];
+]
 
-const tabs = ['Suggestions', 'My List'];
+const tabs = ["Suggestions", "My List"]
 
 export default function Shopping() {
-  const [activeTab, setActiveTab] = useState(0);
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const [expandedItem, setExpandedItem] = useState<number | null>(null);
-  const [currentShoppingList, setCurrentShoppingList] = useState(shoppingList);
-  const colors = useThemeColors();
-  const colorScheme = useColorScheme();
-  const router = useRouter();
+  const [activeTab, setActiveTab] = useState(0)
+  const [selectedItems, setSelectedItems] = useState<number[]>([])
+  const [expandedItem, setExpandedItem] = useState<number | null>(null)
+  const [currentShoppingList, setCurrentShoppingList] = useState(shoppingList)
+  const colors = useThemeColors()
+  const colorScheme = useColorScheme()
+  const router = useRouter()
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high':
-        return colors.error;
-      case 'medium':
-        return colors.warning;
-      case 'low':
-        return colors.success;
+      case "high":
+        return colors.error
+      case "medium":
+        return colors.warning
+      case "low":
+        return colors.success
       default:
-        return colors.primary;
+        return colors.primary
     }
-  };
+  }
 
   const toggleItemSelection = (itemId: number) => {
-    setSelectedItems(prev => 
-      prev.includes(itemId) 
-        ? prev.filter(id => id !== itemId)
-        : [...prev, itemId]
-    );
-  };
+    setSelectedItems((prev) => (prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]))
+  }
 
   const toggleItemExpansion = (itemId: number) => {
-    setExpandedItem(expandedItem === itemId ? null : itemId);
-  };
+    setExpandedItem(expandedItem === itemId ? null : itemId)
+  }
 
   const addToShoppingList = () => {
     if (selectedItems.length === 0) {
-      Alert.alert('No items selected', 'Please select items to add to your shopping list');
-      return;
+      Alert.alert("No items selected", "Please select items to add to your shopping list")
+      return
     }
-    
+
     const newItems = suggestedItems
-      .filter(item => selectedItems.includes(item.id))
-      .map(item => ({
+      .filter((item) => selectedItems.includes(item.id))
+      .map((item) => ({
         id: Date.now() + item.id,
         name: item.name,
         quantity: 1,
-        bestPrice: item.prices.find(p => p.recommended)?.price || item.prices[0].price,
-        platform: item.prices.find(p => p.recommended)?.platform || item.prices[0].platform,
+        bestPrice: item.prices.find((p) => p.recommended)?.price || item.prices[0].price,
+        platform: item.prices.find((p) => p.recommended)?.platform || item.prices[0].platform,
         image: item.image,
-      }));
-    
-    setCurrentShoppingList(prev => [...prev, ...newItems]);
-    setSelectedItems([]);
-    Alert.alert('Success', `${newItems.length} items added to shopping list`);
-  };
+      }))
+
+    setCurrentShoppingList((prev) => [...prev, ...newItems])
+    setSelectedItems([])
+    Alert.alert("Success", `${newItems.length} items added to shopping list`)
+  }
 
   const removeFromShoppingList = (itemId: number) => {
-    setCurrentShoppingList(prev => prev.filter(item => item.id !== itemId));
-    Alert.alert('Removed', 'Item removed from shopping list');
-  };
+    setCurrentShoppingList((prev) => prev.filter((item) => item.id !== itemId))
+    Alert.alert("Removed", "Item removed from shopping list")
+  }
 
   const openPlatform = (platform: string, productName: string) => {
-    Alert.alert('Opening ' + platform, `This would open ${platform} app/website with ${productName}`);
-  };
+    Alert.alert("Opening " + platform, `This would open ${platform} app/website with ${productName}`)
+  }
 
   const handleAddItem = () => {
-    router.push('/shopping/add');
-  };
+    router.push("/shopping/add")
+  }
 
   const renderSuggestionsView = () => (
     <View style={styles.suggestionsContainer}>
@@ -160,24 +149,24 @@ export default function Shopping() {
           <TouchableOpacity
             style={[
               styles.suggestionCard,
-              { backgroundColor: colors.surface, borderColor: selectedItems.includes(item.id) ? colors.primary : 'transparent' },
-              colorScheme === 'light' ? Shadows.light : Shadows.dark,
-              selectedItems.includes(item.id) && { borderWidth: 2 }
+              {
+                backgroundColor: colors.surface,
+                borderColor: selectedItems.includes(item.id) ? colors.primary : "transparent",
+              },
+              colorScheme === "light" ? Shadows.light : Shadows.dark,
+              selectedItems.includes(item.id) && { borderWidth: 2 },
             ]}
             onPress={() => toggleItemExpansion(item.id)}
           >
             <View style={styles.suggestionContent}>
               <Image source={{ uri: item.image }} style={styles.suggestionImage} />
-              
+
               <View style={styles.suggestionInfo}>
                 <View style={styles.suggestionHeader}>
                   <Text style={[styles.itemName, { color: colors.text }]} numberOfLines={1}>
                     {item.name}
                   </Text>
-                  <TouchableOpacity 
-                    style={styles.selectionIndicator}
-                    onPress={() => toggleItemSelection(item.id)}
-                  >
+                  <TouchableOpacity style={styles.selectionIndicator} onPress={() => toggleItemSelection(item.id)}>
                     {selectedItems.includes(item.id) ? (
                       <Check size={20} color={colors.primary} />
                     ) : (
@@ -185,12 +174,12 @@ export default function Shopping() {
                     )}
                   </TouchableOpacity>
                 </View>
-                
+
                 <Text style={[styles.itemCategory, { color: colors.textMuted }]}>{item.category}</Text>
                 <Text style={[styles.suggestionReason, { color: colors.textMuted }]}>{item.reason}</Text>
-                
+
                 <View style={styles.priorityContainer}>
-                  <View style={[styles.priorityBadge, { backgroundColor: getPriorityColor(item.priority) + '20' }]}>
+                  <View style={[styles.priorityBadge, { backgroundColor: getPriorityColor(item.priority) + "20" }]}>
                     <Text style={[styles.priorityText, { color: getPriorityColor(item.priority) }]}>
                       {item.priority.toUpperCase()}
                     </Text>
@@ -200,7 +189,8 @@ export default function Shopping() {
                 <View style={styles.bestPricePreview}>
                   <DollarSign size={16} color={colors.success} />
                   <Text style={[styles.bestPriceText, { color: colors.success }]}>
-                    Best: {item.prices.find(p => p.recommended)?.price} on {item.prices.find(p => p.recommended)?.platform}
+                    Best: {item.prices.find((p) => p.recommended)?.price} on{" "}
+                    {item.prices.find((p) => p.recommended)?.platform}
                   </Text>
                 </View>
               </View>
@@ -208,19 +198,21 @@ export default function Shopping() {
           </TouchableOpacity>
 
           {expandedItem === item.id && (
-            <View style={[
-              styles.priceComparison, 
-              { backgroundColor: colors.surface },
-              colorScheme === 'light' ? Shadows.light : Shadows.dark
-            ]}>
+            <View
+              style={[
+                styles.priceComparison,
+                { backgroundColor: colors.surface },
+                colorScheme === "light" ? Shadows.light : Shadows.dark,
+              ]}
+            >
               <Text style={[styles.priceComparisonTitle, { color: colors.text }]}>Price Comparison</Text>
               {item.prices.map((price, index) => (
-                <TouchableOpacity 
+                <TouchableOpacity
                   key={index}
                   style={[
                     styles.priceOption,
                     { backgroundColor: colors.background, borderColor: colors.border },
-                    price.recommended && { borderColor: colors.success, borderWidth: 2 }
+                    price.recommended && { borderColor: colors.success, borderWidth: 2 },
                   ]}
                   onPress={() => openPlatform(price.platform, item.name)}
                 >
@@ -228,28 +220,25 @@ export default function Shopping() {
                     <View style={styles.priceOptionHeader}>
                       <Text style={[styles.platformName, { color: colors.text }]}>{price.platform}</Text>
                       {price.recommended && (
-                        <View style={[styles.recommendedBadge, { backgroundColor: colors.success + '20' }]}>
+                        <View style={[styles.recommendedBadge, { backgroundColor: colors.success + "20" }]}>
                           <Star size={12} color={colors.success} />
                           <Text style={[styles.recommendedText, { color: colors.success }]}>Best</Text>
                         </View>
                       )}
                     </View>
-                    
+
                     <View style={styles.priceDetails}>
                       <Text style={[styles.priceAmount, { color: colors.primary }]}>{price.price}</Text>
                       <View style={styles.deliveryInfo}>
                         <Truck size={14} color={colors.textMuted} />
                         <Text style={[styles.deliveryText, { color: colors.textMuted }]}>{price.delivery}</Text>
                       </View>
-                      <Text style={[
-                        styles.stockStatus, 
-                        { color: price.inStock ? colors.success : colors.error }
-                      ]}>
-                        {price.inStock ? 'In Stock' : 'Out of Stock'}
+                      <Text style={[styles.stockStatus, { color: price.inStock ? colors.success : colors.error }]}>
+                        {price.inStock ? "In Stock" : "Out of Stock"}
                       </Text>
                     </View>
                   </View>
-                  
+
                   <ExternalLink size={16} color={colors.primary} />
                 </TouchableOpacity>
               ))}
@@ -259,22 +248,22 @@ export default function Shopping() {
       ))}
 
       {selectedItems.length > 0 && (
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[
-            styles.addToListButton, 
+            styles.addToListButton,
             { backgroundColor: colors.primary },
-            colorScheme === 'light' ? Shadows.light : {}
-          ]} 
+            colorScheme === "light" ? Shadows.light : {},
+          ]}
           onPress={addToShoppingList}
         >
           <Plus size={20} color={colors.surface} />
           <Text style={[styles.addToListText, { color: colors.surface }]}>
-            Add {selectedItems.length} item{selectedItems.length > 1 ? 's' : ''} to list
+            Add {selectedItems.length} item{selectedItems.length > 1 ? "s" : ""} to list
           </Text>
         </TouchableOpacity>
       )}
     </View>
-  );
+  )
 
   const renderShoppingListView = () => (
     <View style={styles.listContainer}>
@@ -286,34 +275,29 @@ export default function Shopping() {
       </View>
 
       {currentShoppingList.map((item) => (
-        <View 
-          key={item.id} 
+        <View
+          key={item.id}
           style={[
-            styles.listItem, 
+            styles.listItem,
             { backgroundColor: colors.surface },
-            colorScheme === 'light' ? Shadows.light : Shadows.dark
+            colorScheme === "light" ? Shadows.light : Shadows.dark,
           ]}
         >
           <Image source={{ uri: item.image }} style={styles.listItemImage} />
-          
+
           <View style={styles.listItemInfo}>
             <Text style={[styles.itemName, { color: colors.text }]} numberOfLines={1}>
               {item.name}
             </Text>
-            <Text style={[styles.itemQuantity, { color: colors.textMuted }]}>
-              Quantity: {item.quantity}
-            </Text>
+            <Text style={[styles.itemQuantity, { color: colors.textMuted }]}>Quantity: {item.quantity}</Text>
             <View style={styles.bestPriceInfo}>
               <Text style={[styles.bestPriceLabel, { color: colors.textMuted }]}>Best price: </Text>
               <Text style={[styles.bestPriceAmount, { color: colors.success }]}>{item.bestPrice}</Text>
               <Text style={[styles.bestPricePlatform, { color: colors.textMuted }]}> on {item.platform}</Text>
             </View>
           </View>
-          
-          <TouchableOpacity 
-            style={styles.removeButton}
-            onPress={() => removeFromShoppingList(item.id)}
-          >
+
+          <TouchableOpacity style={styles.removeButton} onPress={() => removeFromShoppingList(item.id)}>
             <X size={20} color={colors.error} />
           </TouchableOpacity>
         </View>
@@ -326,7 +310,7 @@ export default function Shopping() {
           <Text style={[styles.emptyStateText, { color: colors.textMuted }]}>
             Add items from suggestions or manually to get started
           </Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.emptyStateButton, { backgroundColor: colors.primary }]}
             onPress={() => setActiveTab(0)}
           >
@@ -339,32 +323,30 @@ export default function Shopping() {
       {currentShoppingList.length > 0 && (
         <View style={styles.orderSection}>
           <Text style={[styles.orderTitle, { color: colors.text }]}>Quick Order</Text>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={[
-              styles.orderButton, 
+              styles.orderButton,
               { backgroundColor: colors.primary },
-              colorScheme === 'light' ? Shadows.light : {}
-            ]} 
-            onPress={() => openPlatform('Blinkit', 'your shopping list')}
+              colorScheme === "light" ? Shadows.light : {},
+            ]}
+            onPress={() => openPlatform("Blinkit", "your shopping list")}
           >
             <View style={styles.orderButtonContent}>
               <Package size={20} color={colors.surface} />
-              <Text style={[styles.orderButtonText, { color: colors.surface }]}>
-                Order on Blinkit
-              </Text>
+              <Text style={[styles.orderButtonText, { color: colors.surface }]}>Order on Blinkit</Text>
               <ExternalLink size={20} color={colors.surface} />
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
-              styles.orderButton, 
-              styles.secondaryOrderButton, 
+              styles.orderButton,
+              styles.secondaryOrderButton,
               { backgroundColor: colors.background, borderColor: colors.primary },
-              colorScheme === 'light' ? Shadows.light : Shadows.dark
-            ]} 
-            onPress={() => openPlatform('Amazon', 'your shopping list')}
+              colorScheme === "light" ? Shadows.light : Shadows.dark,
+            ]}
+            onPress={() => openPlatform("Amazon", "your shopping list")}
           >
             <View style={styles.orderButtonContent}>
               <Package size={20} color={colors.primary} />
@@ -377,22 +359,34 @@ export default function Shopping() {
         </View>
       )}
     </View>
-  );
+  )
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>Smart Shopping</Text>
-        <TouchableOpacity 
-          style={[
-            styles.floatingAddButton, 
-            { backgroundColor: colors.surface },
-            colorScheme === 'light' ? Shadows.light : Shadows.dark
-          ]}
-          onPress={handleAddItem}
-        >
-          <Plus size={24} color={colors.primary} />
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            style={[
+              styles.headerButton,
+              { backgroundColor: colors.surface },
+              colorScheme === "light" ? Shadows.light : Shadows.dark,
+            ]}
+            onPress={() => router.push("/notifications")}
+          >
+            <Bell size={20} color={colors.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.floatingAddButton,
+              { backgroundColor: colors.primary },
+              colorScheme === "light" ? Shadows.light : {},
+            ]}
+            onPress={handleAddItem}
+          >
+            <Plus size={24} color={colors.surface} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.tabContainer}>
@@ -404,15 +398,12 @@ export default function Shopping() {
               activeTab === index && [
                 styles.activeTab,
                 { backgroundColor: colors.primary },
-                colorScheme === 'light' ? Shadows.light : {}
-              ]
+                colorScheme === "light" ? Shadows.light : {},
+              ],
             ]}
             onPress={() => setActiveTab(index)}
           >
-            <Text style={[
-              styles.tabText,
-              { color: activeTab === index ? colors.surface : colors.textMuted }
-            ]}>
+            <Text style={[styles.tabText, { color: activeTab === index ? colors.surface : colors.textMuted }]}>
               {tab}
             </Text>
           </TouchableOpacity>
@@ -424,7 +415,7 @@ export default function Shopping() {
         {activeTab === 1 && renderShoppingListView()}
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -432,12 +423,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.lg,
     paddingBottom: Spacing.xl,
+  },
+  headerActions: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  headerButton: {
+    borderRadius: BorderRadius.md,
+    width: 48,
+    height: 48,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: Spacing.sm,
   },
   title: {
     ...Typography.title,
@@ -447,11 +450,11 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     width: 48,
     height: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   tabContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: Spacing.lg,
     marginBottom: Spacing.lg,
   },
@@ -461,16 +464,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.sm,
     borderRadius: BorderRadius.sm,
     marginHorizontal: Spacing.xs,
-    alignItems: 'center',
+    alignItems: "center",
     minHeight: 44,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   activeTab: {},
   tabText: {
     ...Typography.caption,
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     fontSize: 13,
-    textAlign: 'center',
+    textAlign: "center",
   },
   content: {
     flex: 1,
@@ -496,7 +499,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   suggestionContent: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   suggestionImage: {
     width: 80,
@@ -508,9 +511,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   suggestionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: Spacing.sm,
   },
   itemName: {
@@ -533,7 +536,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.sm,
     paddingVertical: Spacing.xs,
     borderRadius: BorderRadius.sm,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   priorityText: {
     ...Typography.label,
@@ -542,8 +545,8 @@ const styles = StyleSheet.create({
   selectionIndicator: {
     width: 24,
     height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   unselectedCircle: {
     width: 20,
@@ -552,12 +555,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   bestPricePreview: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   bestPriceText: {
     ...Typography.caption,
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     marginLeft: Spacing.xs,
   },
   priceComparison: {
@@ -571,8 +574,8 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   priceOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderRadius: BorderRadius.sm,
     padding: Spacing.md,
     marginBottom: Spacing.sm,
@@ -582,18 +585,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   priceOptionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: Spacing.sm,
   },
   platformName: {
     ...Typography.body,
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
   },
   recommendedBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: Spacing.sm,
     paddingVertical: Spacing.xs,
     borderRadius: BorderRadius.sm,
@@ -604,16 +607,16 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.xs,
   },
   priceDetails: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   priceAmount: {
     ...Typography.subtitle,
   },
   deliveryInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   deliveryText: {
     ...Typography.caption,
@@ -621,12 +624,12 @@ const styles = StyleSheet.create({
   },
   stockStatus: {
     ...Typography.caption,
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
   },
   addToListButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: BorderRadius.md,
     paddingVertical: Spacing.lg,
     marginTop: Spacing.lg,
@@ -640,8 +643,8 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.xxl,
   },
   listItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderRadius: BorderRadius.md,
     padding: Spacing.lg,
     marginBottom: Spacing.md,
@@ -660,8 +663,8 @@ const styles = StyleSheet.create({
     marginTop: Spacing.xs,
   },
   bestPriceInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: Spacing.xs,
   },
   bestPriceLabel: {
@@ -669,7 +672,7 @@ const styles = StyleSheet.create({
   },
   bestPriceAmount: {
     ...Typography.caption,
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
   },
   bestPricePlatform: {
     ...Typography.caption,
@@ -678,11 +681,11 @@ const styles = StyleSheet.create({
     padding: Spacing.sm,
     minHeight: 44,
     minWidth: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   emptyState: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 64,
   },
   emptyStateTitle: {
@@ -692,12 +695,12 @@ const styles = StyleSheet.create({
   },
   emptyStateText: {
     ...Typography.body,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: Spacing.xl,
   },
   emptyStateButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: Spacing.xl,
     paddingVertical: Spacing.lg,
     borderRadius: BorderRadius.md,
@@ -724,13 +727,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   orderButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   orderButtonText: {
     ...Typography.subtitle,
     marginHorizontal: Spacing.sm,
   },
   secondaryOrderText: {},
-});
+})
