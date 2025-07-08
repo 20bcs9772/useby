@@ -1,18 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  SafeAreaView,
-  Alert,
-  Image,
-} from "react-native"
-import { ArrowLeft, Camera, Search, Save, Package, Scan, Calendar } from "lucide-react-native"
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, SafeAreaView, Alert } from "react-native"
+import { Camera, Search, Calendar, Tag, Package, CircleCheck as CheckCircle } from "lucide-react-native"
 import { useThemeColors, useColorScheme } from "@/hooks/useColorScheme"
 import { Spacing, Typography, BorderRadius, Shadows } from "@/constants/Colors"
 import { useRouter } from "expo-router"
@@ -26,66 +16,75 @@ const categories = [
   { id: "other", name: "Other", icon: "📦", color: "#DDA0DD" },
 ]
 
+const quickTags = ["Store in fridge", "Light-sensitive", "Keep dry", "Shake before use", "Take with food", "Fragile"]
+
 export default function AddProduct() {
-  const [productName, setProductName] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("")
+  const [productName, setProductName] = useState("")
   const [openDate, setOpenDate] = useState("")
   const [expiryDate, setExpiryDate] = useState("")
   const [notes, setNotes] = useState("")
-  const [scannedItem, setScannedItem] = useState(null)
-  const [isScanning, setIsScanning] = useState(false)
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const colors = useThemeColors()
   const colorScheme = useColorScheme()
   const router = useRouter()
 
-  const handleScan = () => {
-    setIsScanning(true)
-    // Simulate barcode scanning
-    setTimeout(() => {
-      const mockScannedItem = {
-        name: "Vitamin D3 Tablets",
-        category: "medicine",
-        image: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=200",
-        expiryDate: "2024-12-15",
-      }
-      setScannedItem(mockScannedItem)
-      setProductName(mockScannedItem.name)
-      setSelectedCategory(mockScannedItem.category)
-      setExpiryDate(mockScannedItem.expiryDate)
-      setIsScanning(false)
-      Alert.alert("Product Scanned", "Product details loaded from barcode")
-    }, 2000)
+  const handleScanBarcode = () => {
+    Alert.alert("Camera", "Barcode scanning would open camera here")
   }
 
-  const handleSearch = () => {
-    Alert.alert("Search Products", "Product database search would open here")
+  const handleSearchProduct = () => {
+    Alert.alert("Search", "Product search would open here")
   }
 
-  const handleSave = () => {
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
+  }
+
+  const handleSaveProduct = () => {
     if (!productName || !selectedCategory) {
       Alert.alert("Error", "Please fill in required fields")
       return
     }
 
-    Alert.alert("Product Added", `${productName} has been added to your inventory`, [
-      {
-        text: "OK",
-        onPress: () => router.back(),
-      },
-    ])
+    setShowSuccess(true)
+    setTimeout(() => {
+      setShowSuccess(false)
+      // Reset form
+      setProductName("")
+      setSelectedCategory("")
+      setOpenDate("")
+      setExpiryDate("")
+      setNotes("")
+      setSelectedTags([])
+      // Navigate back to home
+      router.back()
+    }, 2000)
+  }
+
+  if (showSuccess) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={styles.successContainer}>
+          <View style={[styles.successIcon, { backgroundColor: colors.success + "20" }]}>
+            <CheckCircle size={64} color={colors.success} />
+          </View>
+          <Text style={[styles.successTitle, { color: colors.text }]}>Product Added!</Text>
+          <Text style={[styles.successMessage, { color: colors.textMuted }]}>
+            {productName} has been successfully added to your inventory
+          </Text>
+        </View>
+      </SafeAreaView>
+    )
   }
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text }]}>Add Product</Text>
-        <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primary }]} onPress={handleSave}>
-          <Save size={20} color={colors.surface} />
-        </TouchableOpacity>
+        <Text style={[styles.subtitle, { color: colors.textMuted }]}>Track a new household item</Text>
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -97,21 +96,15 @@ export default function AddProduct() {
           ]}
         >
           <TouchableOpacity
-            style={[styles.scanButton, { backgroundColor: colors.primary }, isScanning && { opacity: 0.7 }]}
-            onPress={handleScan}
-            disabled={isScanning}
+            style={[styles.scanButton, { backgroundColor: colors.primary }]}
+            onPress={handleScanBarcode}
           >
-            {isScanning ? (
-              <>
-                <Scan size={24} color={colors.surface} />
-                <Text style={[styles.scanButtonText, { color: colors.surface }]}>Scanning...</Text>
-              </>
-            ) : (
-              <>
-                <Camera size={24} color={colors.surface} />
-                <Text style={[styles.scanButtonText, { color: colors.surface }]}>Scan Barcode</Text>
-              </>
-            )}
+            <Camera size={24} color={colorScheme === "light" ? colors.surface : colors.background} />
+            <Text
+              style={[styles.scanButtonText, { color: colorScheme === "light" ? colors.surface : colors.background }]}
+            >
+              Scan Barcode
+            </Text>
           </TouchableOpacity>
 
           <View style={styles.divider}>
@@ -122,34 +115,12 @@ export default function AddProduct() {
 
           <TouchableOpacity
             style={[styles.searchButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
-            onPress={handleSearch}
+            onPress={handleSearchProduct}
           >
             <Search size={20} color={colors.primary} />
             <Text style={[styles.searchButtonText, { color: colors.primary }]}>Search Product Database</Text>
           </TouchableOpacity>
         </View>
-
-        {scannedItem && (
-          <View
-            style={[
-              styles.scannedItemCard,
-              { backgroundColor: colors.surface },
-              colorScheme === "light" ? Shadows.light : Shadows.dark,
-            ]}
-          >
-            <Text style={[styles.scannedTitle, { color: colors.text }]}>Scanned Product</Text>
-            <View style={styles.scannedContent}>
-              <Image source={{ uri: scannedItem.image }} style={styles.scannedImage} />
-              <View style={styles.scannedInfo}>
-                <Text style={[styles.scannedName, { color: colors.text }]}>{scannedItem.name}</Text>
-                <Text style={[styles.scannedCategory, { color: colors.textMuted }]}>
-                  {categories.find((c) => c.id === scannedItem.category)?.name}
-                </Text>
-                <Text style={[styles.scannedExpiry, { color: colors.warning }]}>Expires: {scannedItem.expiryDate}</Text>
-              </View>
-            </View>
-          </View>
-        )}
 
         <View
           style={[
@@ -217,14 +188,12 @@ export default function AddProduct() {
             </View>
 
             <View style={styles.dateInput}>
-              <Text style={[styles.label, { color: colors.text }]}>Expiry Date *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>Expiry Date</Text>
               <TouchableOpacity
                 style={[styles.dateButton, { backgroundColor: colors.background, borderColor: colors.border }]}
               >
                 <Calendar size={16} color={colors.primary} />
-                <Text style={[styles.dateButtonText, { color: expiryDate ? colors.text : colors.textMuted }]}>
-                  {expiryDate || "Select date"}
-                </Text>
+                <Text style={[styles.dateButtonText, { color: colors.textMuted }]}>{expiryDate || "Select date"}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -237,7 +206,7 @@ export default function AddProduct() {
                 styles.textArea,
                 { backgroundColor: colors.background, color: colors.text, borderColor: colors.border },
               ]}
-              placeholder="Add any notes about this product..."
+              placeholder="Add storage instructions, usage notes..."
               placeholderTextColor={colors.textMuted}
               multiline
               numberOfLines={3}
@@ -245,18 +214,45 @@ export default function AddProduct() {
               onChangeText={setNotes}
             />
           </View>
+
+          <View style={styles.tagsSection}>
+            <Text style={[styles.label, { color: colors.text }]}>Quick Tags</Text>
+            <View style={styles.tagsContainer}>
+              {quickTags.map((tag) => (
+                <TouchableOpacity
+                  key={tag}
+                  style={[
+                    styles.tag,
+                    { backgroundColor: colors.background, borderColor: colors.border },
+                    selectedTags.includes(tag) && {
+                      backgroundColor: colors.primary + "20",
+                      borderColor: colors.primary,
+                    },
+                  ]}
+                  onPress={() => toggleTag(tag)}
+                >
+                  <Tag size={14} color={selectedTags.includes(tag) ? colors.primary : colors.textMuted} />
+                  <Text
+                    style={[styles.tagText, { color: selectedTags.includes(tag) ? colors.primary : colors.textMuted }]}
+                  >
+                    {tag}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
         </View>
 
         <TouchableOpacity
-          style={[
-            styles.saveMainButton,
-            { backgroundColor: colors.primary },
-            colorScheme === "light" ? Shadows.light : {},
-          ]}
-          onPress={handleSave}
+          style={[styles.saveButton, { backgroundColor: colors.primary }, colorScheme === "light" ? Shadows.light : {}]}
+          onPress={handleSaveProduct}
         >
-          <Package size={20} color={colors.surface} />
-          <Text style={[styles.saveMainButtonText, { color: colors.surface }]}>Add to Inventory</Text>
+          <Package size={20} color={colorScheme === "light" ? colors.surface : colors.background} />
+          <Text
+            style={[styles.saveButtonText, { color: colorScheme === "light" ? colors.surface : colors.background }]}
+          >
+            Add Product
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -268,32 +264,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.lg,
     paddingBottom: Spacing.xl,
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   title: {
     ...Typography.title,
-    fontSize: 24,
-    flex: 1,
-    textAlign: "center",
-    marginHorizontal: Spacing.lg,
+    fontSize: 28,
   },
-  saveButton: {
-    width: 40,
-    height: 40,
-    borderRadius: BorderRadius.md,
-    justifyContent: "center",
-    alignItems: "center",
+  subtitle: {
+    ...Typography.body,
+    marginTop: Spacing.xs,
   },
   content: {
     flex: 1,
@@ -343,48 +324,14 @@ const styles = StyleSheet.create({
     ...Typography.subtitle,
     marginLeft: Spacing.sm,
   },
-  scannedItemCard: {
-    borderRadius: BorderRadius.md,
-    padding: Spacing.lg,
-    marginBottom: Spacing.lg,
-  },
-  scannedTitle: {
-    ...Typography.subtitle,
-    marginBottom: Spacing.md,
-  },
-  scannedContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  scannedImage: {
-    width: 60,
-    height: 60,
-    borderRadius: BorderRadius.sm,
-    marginRight: Spacing.md,
-  },
-  scannedInfo: {
-    flex: 1,
-  },
-  scannedName: {
-    ...Typography.subtitle,
-    marginBottom: Spacing.xs,
-  },
-  scannedCategory: {
-    ...Typography.caption,
-    marginBottom: Spacing.xs,
-  },
-  scannedExpiry: {
-    ...Typography.caption,
-    fontFamily: "Inter-SemiBold",
-  },
   formSection: {
     borderRadius: BorderRadius.md,
     padding: Spacing.lg,
     marginBottom: Spacing.lg,
   },
   sectionTitle: {
-    ...Typography.subtitle,
-    fontSize: 18,
+    ...Typography.title,
+    fontSize: 20,
     marginBottom: Spacing.lg,
   },
   inputGroup: {
@@ -454,7 +401,30 @@ const styles = StyleSheet.create({
     ...Typography.body,
     marginLeft: Spacing.sm,
   },
-  saveMainButton: {
+  tagsSection: {
+    marginTop: Spacing.sm,
+  },
+  tagsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: Spacing.sm,
+  },
+  tag: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: BorderRadius.xl,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    marginRight: Spacing.sm,
+    marginBottom: Spacing.sm,
+    borderWidth: 1,
+  },
+  tagText: {
+    ...Typography.body,
+    fontSize: 12,
+    marginLeft: Spacing.xs,
+  },
+  saveButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -463,8 +433,32 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.xxl,
     minHeight: 56,
   },
-  saveMainButtonText: {
+  saveButtonText: {
     ...Typography.subtitle,
     marginLeft: Spacing.sm,
+  },
+  successContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: Spacing.xl,
+  },
+  successIcon: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: Spacing.xl,
+  },
+  successTitle: {
+    ...Typography.title,
+    fontSize: 24,
+    marginBottom: Spacing.md,
+  },
+  successMessage: {
+    ...Typography.body,
+    textAlign: "center",
+    lineHeight: 20,
   },
 })
